@@ -10,7 +10,7 @@ import Swal from "sweetalert2"
 
 import { getLocalStorage } from "../utils/localStorageHelper"
 
-export default function page() {
+export default function Page() {
 
   const [token, setToken] = useState("")
   const router = useRouter()

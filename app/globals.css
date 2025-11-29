@@ -95,3 +95,14 @@ body {
     text-wrap: balance;
   }
 }
+
+.table-transaction td {
+  padding-right: 10px;
+  padding-left: 10px;
+  padding-bottom: 2px;
+  padding-top: 2px;
+}
+
+.table-transaction tr td:nth-child(1) {
+  padding-left: 0 !important;
+}

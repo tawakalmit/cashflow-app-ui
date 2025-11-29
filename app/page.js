@@ -1,7 +1,21 @@
+"use client"
+
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+
+import { getLocalStorage } from "./utils/localStorageHelper";
 
 export default function Home() {
+
+  const router = useRouter()
+
+  useEffect(() => {
+    const token = getLocalStorage("token")
+    if (token) router.push('/booklist')
+  },[])
+
   return (
     <div className="w-full h-screen max-w-[431px] mx-auto bg-white relative">
       <div className="w-full h-full p-5 flex flex-col justify-end gap-10 text-black">

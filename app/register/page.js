@@ -1,10 +1,78 @@
+"use client"
+
 import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+
+import Swal from 'sweetalert2'
+import axios from "axios"
+
+import { setLocalStorage, getLocalStorage } from '../utils/localStorageHelper'
 
 export default function Register() {
+
+  const router = useRouter()
+
+  const register = async (e) => {
+    e.preventDefault()
+
+    const username = e.target[0].value
+    const email = e.target[1].value
+    const password = e.target[2].value
+    const passwordConfirm = e.target[3].value
+
+    if (password !== passwordConfirm) {
+        Swal.fire({
+            title: "Password konfirmasi tidak sama",
+            customClass: {
+                confirmButton: "bg-[#f1c40f] text-white"
+            },
+        });
+        return
+    }
+
+    axios.post("/api/auth/register",
+    {
+        username: username,
+        email: email,
+        password: password
+    },
+    {
+        headers: {
+        "Content-Type": "application/json",
+        }
+    }
+    )
+    .then(res => {
+        console.log(res)
+        const token = res?.data?.data?.token
+        if (token) {
+            setLocalStorage("token", token)
+            router.push('/booklist')
+        }
+    })
+    .catch(err => {
+        const message = err?.response?.data?.message
+        if (message) {
+            Swal.fire({
+                title: message,
+                customClass: {
+                    confirmButton: "bg-[#f1c40f] text-white"
+                },
+            });
+        }
+    })
+  }
+    
+  useEffect(() => {
+    const token = getLocalStorage("token")
+    if (token) router.push('/booklist')
+  },[])
+
   return (
-    <form className="w-full h-screen max-w-[431px] mx-auto bg-[#f1c40f] relative">
+    <form onSubmit={register} className="w-full h-screen max-w-[431px] mx-auto bg-[#f1c40f] relative">
         <div className='absolute bottom-0'>
             <div className='w-full h-fit p-5 text-white flex flex-col gap-2'>
                 <div className='w-10'><Image src="/cashflow-512.png" width={400} height={400} alt='img' className='w-full h-full' /></div>
